@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Козацькі скарби: Таємниця Січі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #1b120c;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Шари для плавного крос-фейду фонів */
+        .bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            transition: opacity 0.8s ease-in-out;
+            z-index: 1;
+        }
+
+        /* Контейнер заголовка (назву прибрано за запитом, залишено гнучкий простір) */
+        .main-title-container {
+            position: absolute;
+            top: 3vh;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+            width: 90%;
+            max-width: 800px;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Кнопка повернення на головну (на локаціях) — адаптивні розміри */
+        .home-btn {
+            position: absolute;
+            top: 2vh;
+            left: 2vw;
+            background: linear-gradient(135deg, #4a2e18, #2c1a0e);
+            color: #f4ebd0;
+            border: 2px solid #c5a059;
+            padding: clamp(6px, 1.2vh, 12px) clamp(10px, 2vw, 20px);
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: none;
+            max-width: 180px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .home-btn:hover {
+            background: linear-gradient(135deg, #8b0000, #500);
+            border-color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        /* Жива кнопка з іконкою "і" по центру для першої сторінки */
+        .info-btn-main {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: clamp(60px, 10vw, 85px);
+            height: clamp(60px, 10vw, 85px);
+            background: radial-gradient(circle, rgba(255,215,0,1) 0%, rgba(139,0,0,0.9) 100%);
+            color: #ffffff;
+            border: 3px solid #ffd700;
+            border-radius: 50%;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+            font-weight: 900;
+            font-style: italic;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), inset 0 0 15px rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseInfo 2s infinite ease-in-out;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* Кнопка "і" зверху по центру для першої локації */
+        .info-btn-loc1 {
+            position: absolute;
+            top: 2vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(50px, 8vw, 70px);
+            height: clamp(50px, 8vw, 70px);
+            background: radial-gradient(circle, rgba(255,215,0,1) 0%, rgba(139,0,0,0.95) 100%);
+            color: #ffffff;
+            border: 3px solid #ffd700;
+            border-radius: 50%;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 900;
+            font-style: italic;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1), inset 0 0 15px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            z-index: 150;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: pulseLoc1 1.5s infinite ease-in-out;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
+        }
+
+        @keyframes pulseInfo {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 0 0 rgba(255, 215, 0, 0.8);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.12);
+                box-shadow: 0 0 35px rgba(255, 215, 0, 1), 0 0 0 18px rgba(255, 215, 0, 0);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 0 0 rgba(255, 215, 0, 0);
+            }
+        }
+
+        @keyframes pulseLoc1 {
+            0% {
+                transform: translateX(-50%) scale(1);
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 0 0 0 rgba(255, 215, 0, 0.9);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.15);
+                box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 0 15px rgba(255, 215, 0, 0);
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 0 0 0 rgba(255, 215, 0, 0);
+            }
+        }
+
+        .info-btn-main:hover, .info-btn-loc1:hover {
+            background: radial-gradient(circle, rgba(255,235,59,1) 0%, rgba(180,0,0,1) 100%);
+            border-color: #ffffff;
+            animation: none;
+        }
+
+        .info-btn-main:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+        }
+
+        .info-btn-loc1:hover {
+            transform: translateX(-50%) scale(1.15);
+        }
+
+        /* Анімовані пульсуючі мітки-кнопочки з адаптивним розміром */
+        .interactive-zone {
+            position: absolute;
+            z-index: 20;
+            cursor: pointer;
+            border-radius: 50%;
+            width: clamp(38px, 6vw, 55px);
+            height: clamp(38px, 6vw, 55px);
+            display: none;
+            animation: pulseMarker 2s infinite ease-in-out;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.9), inset 0 0 10px rgba(255, 255, 255, 0.9);
+            border: 3px solid #ffd700;
+            background: radial-gradient(circle, rgba(255,215,0,0.9) 0%, rgba(139,0,0,0.8) 100%);
+        }
+
+        .interactive-zone.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            animation: none;
+            pointer-events: none;
+            filter: grayscale(0.8);
+        }
+
+        @keyframes pulseMarker {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), 0 0 0 0 rgba(255, 215, 0, 0.7);
+            }
+            50% {
+                transform: scale(1.18);
+                box-shadow: 0 0 25px rgba(255, 215, 0, 1), 0 0 0 15px rgba(255, 215, 0, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), 0 0 0 0 rgba(255, 215, 0, 0);
+            }
+        }
+
+        .interactive-zone:hover {
+            filter: brightness(1.3);
+            animation: none;
+            transform: scale(1.2);
+        }
+
+        /* Козацька хмаринка-підказка */
+        .cloud-tooltip {
+            position: absolute;
+            background: #fff8e8;
+            color: #3b2c24;
+            border: 3px solid #c5a059;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 215, 0, 0.6);
+            z-index: 3000;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            pointer-events: none;
+            max-width: 260px;
+            width: max-content;
+            word-wrap: break-word;
+        }
+
+        .cloud-tooltip.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Повноекранне модальне вікно для завдання LearningApps */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.92);
+            z-index: 2000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            position: relative;
+            width: 95vw;
+            height: 90vh;
+            background: #f4ebd0;
+            border: 5px solid #4a2e18;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            cursor: pointer;
+            color: #8b0000;
+            font-weight: bold;
+            z-index: 2010;
+            background: #f4ebd0;
+            border-radius: 50%;
+            width: clamp(35px, 5vw, 45px);
+            height: clamp(35px, 5vw, 45px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #8b0000;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #8b0000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            color: #8b0000;
+            padding: 12px 20px;
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            text-align: center;
+            background: #e3d2ab;
+            border-bottom: 3px double #c5a059;
+        }
+
+        /* Стильна кнопка переходу по центру внизу з адаптивним розміром */
+        .next-bg-btn {
+            position: absolute;
+            bottom: 3vh;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #8b0000, #500);
+            color: #f4ebd0;
+            border: 3px solid #c5a059;
+            padding: clamp(8px, 1.5vh, 12px) clamp(20px, 3vw, 30px);
+            border-radius: 30px;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(197, 160, 89, 0.5);
+            transition: all 0.3s ease;
+            z-index: 100;
+            text-transform: uppercase;
+            max-width: 90vw;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .next-bg-btn:hover {
+            background: linear-gradient(135deg, #a50000, #700);
+            border-color: #ffd700;
+            transform: translateX(-50%) translateY(-2px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(197, 160, 89, 0.8);
+        }
+
+        .next-bg-btn.locked {
+            background: linear-gradient(135deg, #3a3a3a, #222);
+            color: #888;
+            border-color: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.6;
+            transform: translateX(-50%) scale(1);
+            pointer-events: none;
+        }
+
+        /* Повноекранна грамота на весь екран по центру на прозорому фоні з підсвіткою */
+        .diploma-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: transparent;
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            pointer-events: auto;
+        }
+
+        .gramota-box {
+            background: transparent;
+            padding: 10px;
+            max-width: 95vw;
+            max-height: 98vh;
+            width: auto;
+            text-align: center;
+            position: relative;
+            transform-origin: center;
+            animation: scrollUnroll 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes scrollUnroll {
+            0% {
+                transform: scaleX(0.05) scaleY(0.02) rotate(-10deg);
+                opacity: 0;
+                filter: blur(10px);
+            }
+            50% {
+                transform: scaleX(1.05) scaleY(0.3) rotate(2deg);
+                opacity: 0.7;
+                filter: blur(2px);
+            }
+            100% {
+                transform: scaleX(1) scaleY(1) rotate(0deg);
+                opacity: 1;
+                filter: blur(0px);
+            }
+        }
+
+        .diploma-img-container {
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.85), 0 0 100px rgba(255, 140, 0, 0.5), inset 0 0 30px rgba(255, 235, 59, 0.6);
+            border: 3px solid #ffd700;
+            background: rgba(0, 0, 0, 0.4);
+            line-height: 0;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .diploma-img-container img {
+            display: block;
+            max-width: 100vw;
+            max-height: 85vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Кнопка "Переглянути відео" на грамоті */
+        .diploma-link-btn {
+            position: absolute;
+            bottom: 2.5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: inline-block;
+            background: linear-gradient(135deg, #b8860b, #8b0000, #d4af37);
+            background-size: 200% 200%;
+            color: #ffffff;
+            border: 3px solid #ffd700;
+            padding: clamp(8px, 1.2vh, 12px) clamp(16px, 2.5vw, 24px);
+            border-radius: 30px;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.75rem, 1.4vw, 1.05rem);
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 6px 18px rgba(0,0,0,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2510;
+            white-space: nowrap;
+            animation: videoBtnPulse 2.2s infinite ease-in-out, gradientShift 4s infinite linear;
+        }
+
+        @keyframes videoBtnPulse {
+            0% {
+                transform: translateX(-50%) scale(1);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 0 0 rgba(255, 215, 0, 0.8);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.07);
+                box-shadow: 0 0 35px rgba(255, 215, 0, 1), 0 0 0 12px rgba(255, 215, 0, 0);
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 0 0 rgba(255, 215, 0, 0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .diploma-link-btn:hover {
+            background: linear-gradient(135deg, #ffd700, #a50000);
+            border-color: #ffffff;
+            transform: translateX(-50%) scale(1.05);
+            animation: none;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 10px 25px rgba(0,0,0,0.9);
+        }
+
+        /* Кнопка перезапуску квесту */
+        .diploma-restart-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(44, 26, 14, 0.85);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 2510;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .diploma-restart-btn:hover {
+            background: #8b0000;
+            color: #fff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Шари для плавного крос-фейду фонів -->
+    <div id="bg1" class="bg-layer" style="opacity: 1;"></div>
+    <div id="bg2" class="bg-layer" style="opacity: 0;"></div>
+
+    <!-- Аудіотеги -->
+    <audio id="myAudio" src="-.mp4"></audio>
+    <audio id="myAudioLoc1" src="-15-.mp4"></audio>
+
+    <!-- Кнопка з іконкою "і" для головної сторінки -->
+    <button class="info-btn-main" id="buttonI" title="Прослухати аудіо">і</button>
+
+    <!-- Кнопка з іконкою "і" для першої локації -->
+    <button class="info-btn-loc1" id="buttonILoc1" title="Підготуй зброю до походу">і</button>
+
+    <!-- Контейнер заголовка (назву видалено, структура збережена) -->
+    <div class="main-title-container" id="title-container"></div>
+
+    <!-- Кнопка повернення на головну сторінку -->
+    <button class="home-btn" id="home-btn" onclick="goToHome()">⌂ На головну</button>
+
+    <!-- КОНТЕЙНЕР ДЛЯ МІТОК НА ЛОКАЦІЯХ -->
+    <div id="markers-container"></div>
+
+    <!-- Повноекранне модальне вікно для завдання LearningApps -->
+    <div class="modal" id="task-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeTaskModal()">&times;</span>
+            <div class="modal-title">Випробування: Козацький гарт</div>
+            <iframe id="learningapps-iframe" src="" style="border:0px;width:100%;height:100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+        </div>
+    </div>
+
+    <!-- Повноекранна козацька грамота -->
+    <div class="diploma-overlay" id="diploma-overlay">
+        <div class="gramota-box">
+            <button class="diploma-restart-btn" onclick="closeDiploma()">На початок ⟳</button>
+            <div class="diploma-img-container">
+                <img src="https://lh3.googleusercontent.com/d/1lpJYp0nJlpwcqONnq_yaMEk3E_WPf5tP" alt="Козацька грамота">
+                <a href="https://youtu.be/mXTqVC4864w" target="_blank" class="diploma-link-btn">▶ Переглянути козацьке відео ➔</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Козацька хмаринка-підказка для обманок -->
+    <div class="cloud-tooltip" id="cloud-tooltip">Ой лишенько, спробуй-но ще раз!</div>
+
+    <!-- Кнопка для зміни фону на наступний -->
+    <button class="next-bg-btn locked" id="next-btn" onclick="nextBackground()">Почати квест ➔</button>
+
+    <script>
+        const slides = [
+            {
+                url: 'https://lh3.googleusercontent.com/d/1_E2C-RtlUwCCfj_EspOTChWCv7gxl8Xf',
+                position: 'center 70%'
+            },
+            {
+                url: 'https://lh3.googleusercontent.com/d/134bNiULHQL4MuEB7t2CPTsdTr7kJdUyL',
+                position: 'center center'
+            },
+            {
+                url: 'https://lh3.googleusercontent.com/d/1zgku8h28M-pjN6L5aUa5faYy9Ku9yJl5',
+                position: 'center center'
+            },
+            {
+                url: 'https://lh3.googleusercontent.com/d/1nru32AIwYlWMeRIdxezcf7k-0rv3XdW6',
+                position: 'center center'
+            },
+            {
+                url: 'https://lh3.googleusercontent.com/d/12oJco4aZ4YMPeka83Ymw-h88owT3r-SH',
+                position: 'center center'
+            }
+        ];
+
+        const horseTrapPhrases = [
+            "Гей-ого-го! Кінь каже: пошукай в іншому кутку степу! 🐴",
+            "Цей кінь — справжній хитрун! Озирнись і шукай мітку далі!",
+            "Тут тільки копитом збили пил! Шукай скарб у новому місці!",
+            "Обережно, коник жваво крутить хвостом! Ткни в іншу точку! ⚡",
+            "Не той кущ, козаче! Вірний кінь підказує пошукати в іншому боці!"
+        ];
+
+        const generalTrapPhrases = [
+            "Ой лишенько, тут лише козацький вітер свище! Шукай далі!",
+            "Не те місце, друже! Скарб десь неподалік!",
+            "Спробуй-но ще раз у сусідньому куточку!",
+            "Гей, козаче, очі врозтіч! Пошукай в іншому місці!"
+        ];
+
+        const rawAppIds = ['21551337', '21529970', '23961221', '22592408'];
+        const possibleCoordinates = [
+            { top: '25%', left: '20%' },
+            { top: '30%', left: '75%' },
+            { top: '55%', left: '15%' },
+            { top: '50%', left: '48%' },
+            { top: '70%', left: '75%' },
+            { top: '35%', left: '85%' },
+            { top: '75%', left: '30%' }
+        ];
+
+        let locationMarkers = {};
+        let shuffledAppIds = [];
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function randomizeQuestData() {
+            shuffledAppIds = shuffleArray(rawAppIds);
+            locationMarkers = {};
+
+            for (let locId = 1; locId <= 4; locId++) {
+                let coordsPool = shuffleArray(possibleCoordinates);
+                let markersList = [];
+                let correctIndex = Math.floor(Math.random() * 5);
+                
+                for (let i = 0; i < 5; i++) {
+                    if (i === correctIndex) {
+                        markersList.push({
+                            top: coordsPool[i].top,
+                            left: coordsPool[i].left,
+                            isCorrect: true,
+                            appId: shuffledAppIds[locId - 1]
+                        });
+                    } else {
+                        markersList.push({
+                            top: coordsPool[i].top,
+                            left: coordsPool[i].left,
+                            isCorrect: false
+                        });
+                    }
+                }
+                locationMarkers[locId] = markersList;
+            }
+        }
+
+        randomizeQuestData();
+
+        let audioCtx = null;
+        let hasListenedMainAudio = false;          
+        let hasListenedLocation1Audio = false;     
+        let taskClosedForCurrentLocation = {       
+            1: false,
+            2: false,
+            3: false,
+            4: false
+        };
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playCossackBellSound() {
+            initAudio();
+            const now = audioCtx.currentTime;
+            const bellFrequencies = [523.25, 1046.50, 1567.98, 2093.00, 3135.96];
+            
+            bellFrequencies.forEach((freq, index) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = index === 0 ? 'sine' : 'triangle';
+                osc.frequency.setValueAtTime(freq, now);
+                
+                const baseVolume = index === 0 ? 0.35 : (0.15 / (index + 1));
+                
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(baseVolume, now + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.5);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start(now);
+                osc.stop(now + 3.5);
+            });
+        }
+
+        function playHorseFunnySound() {
+            initAudio();
+            const now = audioCtx.currentTime;
+            const freqs = [150, 320, 480, 240, 640, 100, 300];
+            freqs.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = (i % 2 === 0) ? 'triangle' : 'square';
+                osc.frequency.setValueAtTime(f + i * 20, now + i * 0.035);
+                gain.gain.setValueAtTime(0.22, now + i * 0.035);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.035 + 0.05);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + i * 0.035);
+                osc.stop(now + i * 0.035 + 0.05);
+            });
+        }
+
+        function playGeneralFunnySound() {
+            initAudio();
+            const now = audioCtx.currentTime;
+            const freqs = [200, 400, 250, 500];
+            freqs.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(f, now + i * 0.05);
+                gain.gain.setValueAtTime(0.18, now + i * 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.07);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + i * 0.05);
+                osc.stop(now + i * 0.05 + 0.07);
+            });
+        }
+
+        function playSuccessChime() {
+            initAudio();
+            const now = audioCtx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, index) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + index * 0.06);
+                gain.gain.setValueAtTime(0.18, now + index * 0.06);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.06 + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + index * 0.06);
+                osc.stop(now + index * 0.06 + 0.5);
+            });
+        }
+
+        slides.forEach(slide => {
+            const img = new Image();
+            img.src = slide.url;
+        });
+
+        let currentIndex = 0;
+        let activeLayer = 1;
+
+        const layer1 = document.getElementById('bg1');
+        layer1.style.backgroundImage = `url('${slides[0].url}')`;
+        layer1.style.backgroundPosition = slides[0].position;
+
+        function updateScene() {
+            const currentSlide = slides[currentIndex];
+            const l1 = document.getElementById('bg1');
+            const l2 = document.getElementById('bg2');
+
+            const homeBtn = document.getElementById('home-btn');
+            const infoBtnMain = document.getElementById('buttonI');
+            const infoBtnLoc1 = document.getElementById('buttonILoc1');
+            const nextBtn = document.getElementById('next-btn');
+
+            const tooltip = document.getElementById('cloud-tooltip');
+            tooltip.classList.remove('show');
+
+            infoBtnMain.style.display = 'none';
+            infoBtnLoc1.style.display = 'none';
+
+            if (currentIndex === 0) {
+                homeBtn.style.display = 'none';
+                infoBtnMain.style.display = 'flex';
+                nextBtn.style.display = 'block';
+
+                if (!hasListenedMainAudio) {
+                    nextBtn.classList.add('locked');
+                } else {
+                    nextBtn.classList.remove('locked');
+                }
+                nextBtn.innerText = "Почати квест ➔";
+            } else {
+                homeBtn.style.display = 'block';
+
+                if (currentIndex === 1) {
+                    infoBtnLoc1.style.display = 'flex';
+                }
+
+                if (currentIndex === slides.length - 1) {
+                    nextBtn.style.display = 'none';
+                } else {
+                    nextBtn.style.display = 'block';
+                    if (taskClosedForCurrentLocation[currentIndex]) {
+                        nextBtn.classList.remove('locked');
+                    } else {
+                        nextBtn.classList.add('locked');
+                    }
+                    nextBtn.innerText = "Далі ➔";
+                }
+            }
+
+            renderMarkers(currentIndex);
+
+            if (activeLayer === 1) {
+                l2.style.backgroundImage = `url('${currentSlide.url}')`;
+                l2.style.backgroundPosition = currentSlide.position;
+                l2.style.opacity = '1';
+                l1.style.opacity = '0';
+                activeLayer = 2;
+            } else {
+                l1.style.backgroundImage = `url('${currentSlide.url}')`;
+                l1.style.backgroundPosition = currentSlide.position;
+                l1.style.opacity = '1';
+                l2.style.opacity = '0';
+                activeLayer = 1;
+            }
+        }
+
+        function nextBackground() {
+            if (currentIndex === 0 && !hasListenedMainAudio) return;
+            if (currentIndex > 0 && currentIndex < slides.length - 1 && !taskClosedForCurrentLocation[currentIndex]) return;
+
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateScene();
+        }
+
+        function goToHome() {
+            currentIndex = 0;
+            updateScene();
+        }
+
+        function closeDiploma() {
+            document.getElementById('diploma-overlay').style.display = 'none';
+            currentIndex = 0;
+            Object.keys(taskClosedForCurrentLocation).forEach(key => {
+                taskClosedForCurrentLocation[key] = false;
+            });
+            hasListenedLocation1Audio = false;
+            randomizeQuestData();
+            updateScene();
+        }
+
+        function renderMarkers(slideIndex) {
+            const container = document.getElementById('markers-container');
+            container.innerHTML = '';
+
+            if (slideIndex === 0 || !locationMarkers[slideIndex]) {
+                return;
+            }
+
+            const markersData = locationMarkers[slideIndex];
+            markersData.forEach(data => {
+                const marker = document.createElement('div');
+                marker.className = 'interactive-zone';
+                marker.style.top = data.top;
+                marker.style.left = data.left;
+                marker.style.display = 'block';
+
+                if (slideIndex === 1 && !hasListenedLocation1Audio) {
+                    marker.classList.add('locked');
+                }
+
+                if (data.isCorrect) {
+                    marker.title = "Справжня мітка!";
+                    marker.onclick = (e) => {
+                        if (slideIndex === 1 && !hasListenedLocation1Audio) return;
+                        playSuccessChime();
+                        openTaskModal(data.appId);
+                    };
+                } else {
+                    marker.title = "Перевір це місце...";
+                    marker.onclick = (e) => {
+                        if (slideIndex === 1 && !hasListenedLocation1Audio) return;
+                        if (slideIndex === 3) {
+                            playHorseFunnySound();
+                            showTrapTooltip(e.currentTarget, true);
+                        } else {
+                            playGeneralFunnySound();
+                            showTrapTooltip(e.currentTarget, false);
+                        }
+                    };
+                }
+
+                container.appendChild(marker);
+            });
+        }
+
+        function openTaskModal(appId) {
+            const modalContent = document.querySelector('.modal-content');
+            let iframe = document.getElementById('learningapps-iframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'learningapps-iframe';
+                iframe.style.border = '0px';
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('webkitallowfullscreen', 'true');
+                iframe.setAttribute('mozallowfullscreen', 'true');
+                modalContent.appendChild(iframe);
+            }
+            if (appId) {
+                iframe.src = `https://learningapps.org/watch?app=${appId}`;
+            }
+            document.getElementById('task-modal').style.display = 'flex';
+        }
+
+        function closeTaskModal() {
+            document.getElementById('task-modal').style.display = 'none';
+            
+            if (currentIndex > 0) {
+                taskClosedForCurrentLocation[currentIndex] = true;
+                
+                if (currentIndex === slides.length - 1) {
+                    document.getElementById('diploma-overlay').style.display = 'flex';
+                    playCossackBellSound();
+                } else {
+                    const nextBtn = document.getElementById('next-btn');
+                    nextBtn.classList.remove('locked');
+                }
+            }
+        }
+
+        let tooltipTimer = null;
+        function showTrapTooltip(targetElement, isHorseLocation) {
+            const tooltip = document.getElementById('cloud-tooltip');
+            const phrasesArray = isHorseLocation ? horseTrapPhrases : generalTrapPhrases;
+            const randomPhrase = phrasesArray[Math.floor(Math.random() * phrasesArray.length)];
+            tooltip.innerText = randomPhrase;
+
+            const rect = targetElement.getBoundingClientRect();
+            const tooltipWidth = 260;
+            
+            let leftPos = rect.left + rect.width / 2 - tooltipWidth / 2;
+            if (leftPos < 10) leftPos = 10;
+            if (leftPos + tooltipWidth > window.innerWidth - 10) {
+                leftPos = window.innerWidth - tooltipWidth - 10;
+            }
+
+            let topPos;
+            if (rect.top > 120) {
+                topPos = rect.top - 80;
+            } else {
+                topPos = rect.bottom + 15;
+            }
+
+            tooltip.style.left = `${leftPos}px`;
+            tooltip.style.top = `${topPos}px`;
+            tooltip.classList.add('show');
+            
+            if (tooltipTimer) clearTimeout(tooltipTimer);
+            tooltipTimer = setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 4500);
+        }
+
+        const audio = document.getElementById('myAudio');
+        const buttonI = document.getElementById('buttonI');
+        const nextBtn = document.getElementById('next-btn');
+
+        buttonI.addEventListener('click', () => {
+            audio.play().catch(e => console.log(e));
+        });
+
+        audio.addEventListener('ended', () => {
+            hasListenedMainAudio = true;
+            if (currentIndex === 0) {
+                nextBtn.classList.remove('locked');
+            }
+        });
+
+        const audioLoc1 = document.getElementById('myAudioLoc1');
+        const buttonILoc1 = document.getElementById('buttonILoc1');
+
+        buttonILoc1.addEventListener('click', () => {
+            audioLoc1.play().catch(e => console.log(e));
+        });
+
+        audioLoc1.addEventListener('ended', () => {
+            if (currentIndex === 1) {
+                hasListenedLocation1Audio = true;
+                const markers = document.querySelectorAll('.interactive-zone');
+                markers.forEach(m => m.classList.remove('locked'));
+            }
+        });
+    </script>
+
+</body>
+</html>
